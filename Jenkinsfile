@@ -30,7 +30,7 @@ pipeline {
             post {
                 always {
                     // Правильный способ публикации результатов тестов
-                    junit testResultsPattern: 'junit.xml'
+                    junit testResults: 'junit.xml'
                     
                     // Если есть coverage отчеты
                     publishHTML([
