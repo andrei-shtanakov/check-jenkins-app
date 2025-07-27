@@ -29,10 +29,12 @@ pipeline {
             }
             post {
                 always {
-                    // Сохранение результатов тестов (если есть)
-                    publishTestResults testResultsPattern: 'test-results.xml'
+                    // Правильный способ публикации результатов тестов
+                    junit testResultsPattern: 'junit.xml'
+                    
+                    // Если есть coverage отчеты
                     publishHTML([
-                        allowMissing: false,
+                        allowMissing: true,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
                         reportDir: 'coverage',
