@@ -1,5 +1,5 @@
 pipeline {
-    agint any
+    agent any
 
     stages {
         stage('Hello') {
