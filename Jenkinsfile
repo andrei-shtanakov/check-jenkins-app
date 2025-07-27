@@ -9,11 +9,7 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                    node --version
-                    npm --version
-                    npm ci
-                '''
+                sh 'npm ci'
             }
         }
         
@@ -27,22 +23,6 @@ pipeline {
             steps {
                 sh 'npm test'
             }
-            post {
-                always {
-                    // Правильный способ публикации результатов тестов
-                    junit testResults: 'junit.xml'
-                    
-                    // Если есть coverage отчеты
-                    publishHTML([
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'coverage',
-                        reportFiles: 'index.html',
-                        reportName: 'Coverage Report'
-                    ])
-                }
-            }
         }
         
         stage('Build') {
@@ -53,10 +33,7 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                    npm run build
-                    ls -la
-                '''
+                sh 'npm run build'
             }
         }
     }
