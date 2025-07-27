@@ -36,5 +36,39 @@ pipeline {
                 sh 'npm run build'
             }
         }
+	stage('Post-Build Checks') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "Checking build artifacts..."
+                    
+                    # Проверка наличия папки build
+                    if [ ! -d "build" ]; then
+                        echo "ERROR: build directory not found!"
+                        exit 1
+                    fi
+                    
+                    # Проверка наличия index.html
+                    if [ ! -f "build/index.html" ]; then
+                        echo "ERROR: build/index.html not found!"
+                        exit 1
+                    fi
+                    
+                    # Проверка размера файла (не пустой)
+                    if [ ! -s "build/index.html" ]; then
+                        echo "ERROR: build/index.html is empty!"
+                        exit 1
+                    fi
+                    
+                    echo "✅ All build artifacts are present"
+                    ls -la build/
+                '''
+            }
+        }
     }
 }
