@@ -94,7 +94,7 @@ pipeline {
                     curl -f http://localhost:3000 || exit 1
             
                     # Запускаем тесты
-                    npm run test:e2e
+                    npx playeright test
             
                     # Останавливаем сервер
                     kill $SERVER_PID 2>/dev/null || true
