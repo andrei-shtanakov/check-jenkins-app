@@ -80,7 +80,7 @@ pipeline {
             steps {
                 sh '''
                     echo "E2E test starts..."
-		    npm install -s serve
+		    npm install serve
 		    sereve -s build
                     npx playwright test 
                 '''
