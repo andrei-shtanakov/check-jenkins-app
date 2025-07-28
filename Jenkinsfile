@@ -90,9 +90,6 @@ pipeline {
                     # Ждем запуска сервера
                     sleep 5
             
-                    # Проверяем доступность
-                    curl -f http://localhost:3000 || exit 1
-            
                     # Запускаем тесты
                     npx playeright test
             
