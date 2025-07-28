@@ -1,4 +1,5 @@
 pipeline {
+    agent any
 
     stages {
         stage('Install Dependencies') {
@@ -83,7 +84,7 @@ pipeline {
 		    npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
-                    npx playwright test --reporter=html:q
+                    npx playwright test --reporter=html
 
                 '''
             }
