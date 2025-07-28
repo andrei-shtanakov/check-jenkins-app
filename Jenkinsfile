@@ -80,21 +80,10 @@ pipeline {
             steps {
                 sh '''
                     echo "E2E test starts..."
-		    #npm install serve
-		    #serve -s build
-                    #npx playwright test 
-
-		    npx serve -s build -l 3000 &
-                    SERVER_PID=$!
-            
-                    # Ждем запуска сервера
-                    sleep 5
-            
-                    # Запускаем тесты
-                    npx playeright test
-            
-                    # Останавливаем сервер
-                    kill $SERVER_PID 2>/dev/null || true
+		    npm install serve
+                    node_modules/.bin/serve -s build &
+                    sleep 10
+                    npx playwright test
                 '''
             }
         }
