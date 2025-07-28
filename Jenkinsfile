@@ -1,4 +1,4 @@
-pipeline {
+
     agent any
     stages {
         stage('Install Dependencies') {
@@ -73,7 +73,7 @@ pipeline {
 	stage('E2E') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.54.0-noble'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-noble'
                     reuseNode true
                 }
             }
