@@ -37,22 +37,18 @@ pipeline {
                     steps {
                         sh '''
                             echo "Checking build artifacts..."
-                    
                             if [ ! -d "build" ]; then
                                 echo "ERROR: build directory not found!"
                                 exit 1
                             fi
-                    
                             if [ ! -f "build/index.html" ]; then
                                 echo "ERROR: build/index.html not found!"
                                 exit 1
                             fi
-                    
                             if [ ! -s "build/index.html" ]; then
                                 echo "ERROR: build/index.html is empty!"
                                 exit 1
                             fi
-                    
                             echo "✅ All build artifacts are present"
                             ls -la build/
                         '''
@@ -90,20 +86,19 @@ pipeline {
 		    }
 		}
 	    }
-
-            stage('Deploy') {
-                agent {
-                    docker {
-                        image 'node:18-alpine'
-                        reuseNode true
-                    }
+        }
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
                 }
-                steps {
-                    sh '''
-                        npm install netlify-cli
-                        node_modules/.bin/netlify --version
-                    '''
-                }
+            }
+            steps {
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                '''
             }
 	}
     }
