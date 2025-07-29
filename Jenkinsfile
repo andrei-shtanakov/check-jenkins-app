@@ -14,18 +14,6 @@ pipeline {
             }
         }
         
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'npm test'
-            }
-        }
-        
         stage('Build') {
             agent {
                 docker {
@@ -69,6 +57,12 @@ pipeline {
                             ls -la build/
                         '''
                     }
+		    
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
+                    }
                 }
 	        stage('E2E') {
                     agent {
@@ -87,14 +81,30 @@ pipeline {
 
                         '''
                     }
+
+                    post {
+                        always {
+            junit 'jest-results/junit.xml'
+	                   publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+		    }
+		}
+		stage('Deploy') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        sh '''
+                            npm install netlify-cli
+                            node_modules/.bin/netlify --version
+                        '''
+                    }
                 }
 	    }
 	}
     }
-    post {
-        always {
-            junit 'jest-results/junit.xml'
-	    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
 }
+
