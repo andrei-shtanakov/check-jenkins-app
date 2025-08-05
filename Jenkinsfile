@@ -31,7 +31,7 @@ pipeline {
                 sh 'npm run build'
             }
         }
-	stage('Post Tests') {
+	stage('Tests') {
 	    parallel {
         	stage('Post-Build Checks') {
                     agent {
@@ -42,21 +42,11 @@ pipeline {
                     }
                     steps {
                         sh '''
-                            echo "Checking build artifacts..."
-                            if [ ! -d "build" ]; then
-                                echo "ERROR: build directory not found!"
-                                exit 1
-                            fi
                             if [ ! -f "build/index.html" ]; then
                                 echo "ERROR: build/index.html not found!"
                                 exit 1
                             fi
-                            if [ ! -s "build/index.html" ]; then
-                                echo "ERROR: build/index.html is empty!"
-                                exit 1
-                            fi
-                            echo "✅ All build artifacts are present"
-                            ls -la build/
+			    npm test
                         '''
                     }
 		    
@@ -81,7 +71,6 @@ pipeline {
                             sleep 10
                             npx playwright test --reporter=html
                         '''
-                        }
                     }
 
                     post {
@@ -107,7 +96,6 @@ pipeline {
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                    node_modules/.bin/node-jq -r '.deploy_url' --json > deploy-output.json
                 '''
                 script {
                     env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
